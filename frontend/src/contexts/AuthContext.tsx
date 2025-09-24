@@ -79,10 +79,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.log('Auth check successful:', response.data);
       setUser(response.data.data.user);
       setIsAuthenticated(true);
-    } catch (error: any) {
-      console.log('Auth check failed:', error.response?.status, error.response?.data);
-      // Only try to refresh if it's an auth error, not a network error or other issue
-      if (error.response?.status === 401) {
+  } catch (error: unknown) {
+  const err = error as { response?: { status?: number; data?: unknown } };
+  console.log('Auth check failed:', err.response?.status, err.response?.data);
+  // Only try to refresh if it's an auth error, not a network error or other issue
+  if (err.response?.status === 401) {
         try {
           console.log('Attempting token refresh...');
           await authService.refreshToken();
@@ -90,8 +91,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           console.log('Token refresh successful');
           setUser(response.data.data.user);
           setIsAuthenticated(true);
-        } catch (refreshError: any) {
-          console.log('Token refresh failed:', refreshError.response?.status);
+  } catch (refreshError: unknown) {
+          const refErr = refreshError as { response?: { status?: number } };
+          console.log('Token refresh failed:', refErr.response?.status);
           // Refresh failed, user is not authenticated
           setUser(null);
           setIsAuthenticated(false);

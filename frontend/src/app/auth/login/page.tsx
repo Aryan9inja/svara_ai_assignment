@@ -38,9 +38,10 @@ export default function LoginPage() {
     try {
       await login(data.email, data.password);
       router.push("/dashboard");
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      setError(err.response?.data?.message || "Login failed. Please try again.");
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error.response?.data?.message || "Login failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -99,7 +100,7 @@ export default function LoginPage() {
           </form>
 
           <p className="mt-6 text-center text-sm text-gray-600">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <a href="/auth/signup" className="font-medium text-blue-600 hover:underline transition-colors duration-150">
               Sign up
             </a>

@@ -29,8 +29,8 @@ export const taskService = {
       deadlineFrom?: string;
       deadlineTo?: string;
     } = {}
-  ): Promise<any> => {
-    const params: Record<string, any> = {
+  ): Promise<unknown> => {
+  const params: Record<string, string | number | undefined> = {
       page,
       limit,
     };

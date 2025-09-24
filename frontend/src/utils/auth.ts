@@ -5,7 +5,7 @@
 
 export const authStorage = {
   // Store auth-related preferences
-  setAuthPreferences: (preferences: Record<string, any>) => {
+  setAuthPreferences: (preferences: Record<string, unknown>) => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('auth_preferences', JSON.stringify(preferences));
     }
@@ -56,17 +56,17 @@ export const isSecureConnection = (): boolean => {
 };
 
 // Format auth error messages
-export const formatAuthError = (error: any): string => {
-  if (error?.response?.data?.message) {
-    return error.response.data.message;
+export const formatAuthError = (error: unknown): string => {
+  const err = error as { response?: { data?: { message?: string }, status?: number }; message?: string };
+  if (err?.response?.data?.message) {
+    return err.response.data.message;
   }
-  
-  if (error?.message) {
-    return error.message;
+  if (err?.message) {
+    return err.message;
   }
 
   // Default error messages based on status codes
-  const status = error?.response?.status;
+  const status = err?.response?.status;
   switch (status) {
     case 400:
       return 'Invalid request. Please check your input.';

@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { DragDropContext } from "@hello-pangea/dnd";
+import type { DropResult } from "@hello-pangea/dnd";
 import KanbanColumn from "./KanbanColumn";
 import { taskService } from "@/services/taskService";
 import Box from "@mui/material/Box";
@@ -30,17 +31,18 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId, onEditTask, filter
   const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => {
-    const filterParams: any = {};
+  const filterParams: Record<string, string | number | undefined> = {};
     if (filters?.status) filterParams.status = filters.status;
     if (filters?.priority) filterParams.priority = filters.priority;
     if (filters?.deadlineFrom) filterParams.deadlineFrom = filters.deadlineFrom;
     if (filters?.deadlineTo) filterParams.deadlineTo = filters.deadlineTo;
     taskService.getPaginatedTasks(projectId, 1, 100, filterParams).then((data) => {
-      setTasks(data.data || []);
+      const result = data as { data?: Task[] };
+      setTasks(result.data || []);
     });
   }, [projectId, filters]);
 
-  const onDragEnd = async (result: any) => {
+  const onDragEnd = async (result: DropResult) => {
     const { destination, source, draggableId } = result;
     if (!destination || destination.droppableId === source.droppableId) return;
     const task = tasks.find((t) => t._id === draggableId);
@@ -52,14 +54,16 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId, onEditTask, filter
       )
     );
     // Update status in backend
-    await taskService.updateTask(draggableId, { status: destination.droppableId });
+    await taskService.updateTask(draggableId, { status: destination.droppableId as Task["status"] });
   };
 
-  const groupedTasks = statuses.reduce((acc, status) => {
-    acc[status] = tasks.filter((t) => t.status === status);
-    return acc;
-  }, {} as Record<Task["status"], Task[]>);
-
+  // Group tasks by status (must be after all hooks and logic)
+  const groupedTasks: Record<Task["status"], Task[]> = {
+    todo: tasks.filter((t: Task) => t.status === "todo"),
+    "in-progress": tasks.filter((t: Task) => t.status === "in-progress"),
+    done: tasks.filter((t: Task) => t.status === "done"),
+  };
+  // ...existing code...
   console.log("Grouped tasks:", groupedTasks);
 
   return (
@@ -72,7 +76,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projectId, onEditTask, filter
       width: '100%',
       overflowX: 'auto',
     }}>
-      <DragDropContext onDragEnd={onDragEnd}>
+  <DragDropContext onDragEnd={onDragEnd}>
         <Box
           sx={{
             display: 'grid',

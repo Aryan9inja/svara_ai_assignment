@@ -3,7 +3,7 @@
 import { projectService } from "@/services/projectService";
 import { useEffect, useState } from "react";
 import CreateProjectModal from "./projectModal";
-import { FiFolder, FiEdit, FiTrash2, FiPlus } from "react-icons/fi";
+import { FiFolder, FiTrash2, FiPlus } from "react-icons/fi";
 import { useRouter } from "next/navigation";
 
 type Project = {

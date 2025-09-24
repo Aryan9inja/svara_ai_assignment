@@ -1,5 +1,4 @@
 import { api } from "@/lib/api";
-import { create } from "domain";
 
 export const projectService = {
   getProjects: () => api.get("/projects"),

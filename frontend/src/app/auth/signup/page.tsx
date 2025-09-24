@@ -38,9 +38,10 @@ export default function SignupPage() {
     try {
       await signUp(data.email, data.password);
       router.push("/dashboard");
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      setError(err.response?.data?.message || "Signup failed. Please try again.");
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error.response?.data?.message || "Signup failed. Please try again.");
     } finally {
       setLoading(false);
     }

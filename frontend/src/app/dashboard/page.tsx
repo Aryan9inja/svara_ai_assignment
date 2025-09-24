@@ -188,7 +188,7 @@ export default function DashboardPage() {
             {data.overdueTasks.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full py-8">
                 <span className="text-green-500 text-2xl font-bold mb-2">🎉</span>
-                <p className="text-gray-500 text-base text-center">You're all caught up! No overdue tasks.</p>
+                <p className="text-gray-500 text-base text-center">You&apos;re all caught up! No overdue tasks.</p>
               </div>
             ) : (
               <div className="space-y-3 max-h-72 overflow-y-auto pr-2">

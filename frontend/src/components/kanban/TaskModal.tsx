@@ -6,7 +6,15 @@ interface TaskModalProps {
   open: boolean;
   onClose: () => void;
   projectId: string;
-  task?: any; // If present, edit mode; else, create mode
+  task?: {
+    _id: string;
+    title: string;
+    status: 'todo' | 'in-progress' | 'done';
+    priority: 'low' | 'medium' | 'high';
+    deadline?: string | Date;
+    projectId?: string;
+    createdAt?: Date;
+  }; // If present, edit mode; else, create mode
   onTaskSaved?: () => void; // Callback to refresh UI after save
 }
 
@@ -52,8 +60,9 @@ const TaskModal: React.FC<TaskModalProps> = ({ open, onClose, projectId, task, o
       }
       if (onTaskSaved) onTaskSaved();
       onClose();
-    } catch (err: any) {
-      setError(err?.message || "Failed to save task.");
+    } catch (err: unknown) {
+      const error = err as { message?: string };
+      setError(error?.message || "Failed to save task.");
     } finally {
       setLoading(false);
     }
@@ -86,7 +95,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ open, onClose, projectId, task, o
           fullWidth
           margin="normal"
           value={status}
-          onChange={e => setStatus(e.target.value as any)}
+          onChange={e => setStatus(e.target.value as 'todo' | 'in-progress' | 'done')}
           helperText="Select the current status of the task."
         >
           <MenuItem value="todo">To Do</MenuItem>
@@ -99,7 +108,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ open, onClose, projectId, task, o
           fullWidth
           margin="normal"
           value={priority}
-          onChange={e => setPriority(e.target.value as any)}
+          onChange={e => setPriority(e.target.value as 'low' | 'medium' | 'high')}
           helperText="How important is this task?"
         >
           <MenuItem value="low">Low</MenuItem>

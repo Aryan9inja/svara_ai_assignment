@@ -1,6 +1,6 @@
 import React from "react";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
-import TaskCard, { TaskCardProps } from "./TaskCard";
+import TaskCard from "./TaskCard";
 import { Paper, Typography } from "@mui/material";
 
 import { Task } from "./KanbanBoard";
