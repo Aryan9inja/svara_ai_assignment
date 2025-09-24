@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React from "react";
 import { KanbanBoard } from "@/components/kanban";
@@ -65,24 +65,34 @@ const ProjectPage = () => {
     setRefreshTasksFlag((f) => f + 1);
   };
 
-
   return (
     <Container maxWidth="lg">
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: 24,
+        }}
+      >
         <div>
-          <Typography variant="h3" fontWeight={700} sx={{ mb: 1, letterSpacing: 1 }}>
+          <Typography
+            variant="h3"
+            fontWeight={700}
+            sx={{ mb: 1, letterSpacing: 1 }}
+          >
             Project Tasks
           </Typography>
           <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 0 }}>
             Manage and track your project tasks visually with Kanban.
           </Typography>
         </div>
-        <div style={{ display: 'flex', gap: 16 }}>
+        <div style={{ display: "flex", gap: 16 }}>
           <Button
             variant="contained"
             color="primary"
             size="large"
-            sx={{ boxShadow: 2, borderRadius: 2, textTransform: 'none' }}
+            sx={{ boxShadow: 2, borderRadius: 2, textTransform: "none" }}
             onClick={handleCreateTask}
             aria-label="Create a new task"
           >
@@ -92,7 +102,7 @@ const ProjectPage = () => {
             variant="outlined"
             color="secondary"
             size="large"
-            sx={{ borderRadius: 2, textTransform: 'none' }}
+            sx={{ borderRadius: 2, textTransform: "none" }}
             onClick={handleOpenFilter}
             aria-label="Filter tasks"
           >
@@ -112,7 +122,7 @@ const ProjectPage = () => {
         open={modalOpen}
         onClose={handleCloseModal}
         projectId={projectId}
-        task={editTask}
+        task={editTask ?? undefined}
         onTaskSaved={handleTaskSaved}
       />
       {/* Filter Modal */}
@@ -122,7 +132,10 @@ const ProjectPage = () => {
         PaperProps={{ sx: { borderRadius: 3, p: 2, minWidth: 400 } }}
         aria-labelledby="filter-dialog-title"
       >
-        <DialogTitle id="filter-dialog-title" sx={{ fontWeight: 600, fontSize: 22, pb: 1 }}>
+        <DialogTitle
+          id="filter-dialog-title"
+          sx={{ fontWeight: 600, fontSize: 22, pb: 1 }}
+        >
           Filter Tasks
         </DialogTitle>
         <DialogContent dividers>
@@ -186,8 +199,21 @@ const ProjectPage = () => {
           />
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={handleCloseFilter} color="inherit" sx={{ textTransform: 'none' }}>Cancel</Button>
-          <Button onClick={handleApplyFilter} variant="contained" color="primary" sx={{ textTransform: 'none' }}>Apply</Button>
+          <Button
+            onClick={handleCloseFilter}
+            color="inherit"
+            sx={{ textTransform: "none" }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleApplyFilter}
+            variant="contained"
+            color="primary"
+            sx={{ textTransform: "none" }}
+          >
+            Apply
+          </Button>
         </DialogActions>
       </Dialog>
     </Container>
