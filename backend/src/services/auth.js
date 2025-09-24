@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-import { asyncHandler } from "../utils/asyncHandler.js";
 import { findByEmail } from "../repositories/user.js";
 import { findByIdWithoutSensitiveInfo } from "../repositories/user.js";
 import { ApiError } from "../utils/apiError.js";
@@ -31,7 +30,7 @@ const generateAccessAndRefreshTokens = async (userId) => {
   return { accessToken, refreshToken };
 };
 
-const registerUser = asyncHandler(async (req, res) => {
+const registerUser = async (req, res) => {
   let { email, password } = req.body;
   if (!email || !password) {
     throw new ApiError(409, "All fields are required");
@@ -69,9 +68,9 @@ const registerUser = asyncHandler(async (req, res) => {
         "User registered successfully"
       )
     );
-});
+};
 
-const loginUser = asyncHandler(async (req, res) => {
+const loginUser = async (req, res) => {
   let { email, password } = req.body;
 
   email = email?.trim();
@@ -111,9 +110,9 @@ const loginUser = asyncHandler(async (req, res) => {
         "Login successfull"
       )
     );
-});
+};
 
-const logoutUser = asyncHandler(async (req, res) => {
+const logoutUser = async (req, res) => {
   if (!req.user) throw new ApiError(401, "Not authenticated");
 
   await updateUser(req.user._id, { refreshToken: undefined });
@@ -123,12 +122,12 @@ const logoutUser = asyncHandler(async (req, res) => {
     .clearCookie("accessToken", cookieOptions)
     .clearCookie("refreshToken", cookieOptions)
     .json(new ApiResponse(200, {}, "User logged out"));
-});
+};
 
-const refreshAccessToken = asyncHandler(async (req, res) => {
+const refreshAccessToken = async (req, res) => {
   const incomingRefreshToken = req.cookies.refreshToken;
 
-  if (!incomingRefreshToken) throw new ApiError(401, "Missing refresh token");
+  if (!incomingRefreshToken) throw new ApiError(401, "No refresh token");
 
   const decoded = jwt.verify(
     incomingRefreshToken,
@@ -148,9 +147,9 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     .cookie("accessToken", accessToken, cookieOptions)
     .cookie("refreshToken", newRefreshToken, cookieOptions)
     .json(new ApiResponse(200, { accessToken }, "Access token refreshed"));
-});
+};
 
-const getCurrentUser = asyncHandler(async (req, res) => {
+const getCurrentUser = async (req, res) => {
   const user = req.user;
   if (!user) throw new ApiError(401, "Unauthorized");
 
@@ -160,7 +159,7 @@ const getCurrentUser = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(200, { user: { _id, email } }, "Current user fetched")
     );
-});
+};
 
 export {
   registerUser,
